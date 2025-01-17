@@ -1,0 +1,181 @@
+{
+    "uuid": "e94a4170-6ef6-4b0a-978d-be91893e9a64",
+    "lastMigration": 27,
+    "name": "PaymentsBBVoucherAPI",
+    "endpointPrefix": "",
+    "latency": 0,
+    "port": 3003,
+    "hostname": "",
+    "routes": [
+      {
+        "uuid":"003b7329-926a-4b8b-9bf4-eabdd9733dff",
+        "documentation": "Search beneficiaries",
+        "method": "post",
+        "endpoint": "sync/search",
+        "responses": [
+          {
+            "uuid": "e14155cf-b6f8-4367-2fg3-7dddba2d9c13",
+            "body": "{\"reference_id\":\"12345678901234567890\",\"timestamp\":\"\",\"status\":\"rcvd\",\"status_reason_code\":\"rjct.reference_id.invalid\",\"status_reason_message\":\"string\",\"data\":{\"version\":\"1.0.0\",\"reg_records\":[{\"assistance_unit\":\"member\",\"member\":{\"@type\":\"Member\",\"member_identifier\":[{\"identifier_type\":\"NationalID\",\"identifier_value\":\"1234567890\"}],\"demographic_info\":{\"@type\":\"Person\",\"identifier\":[{\"@type\":\"Identifier\",\"identifier_type\":\"NationalID\",\"identifier_value\":\"1234567890\"}],\"name\":{\"@type\":\"Name\",\"surname\":\"Doe\",\"given_name\":\"John\",\"prefix\":\"Mr.\",\"suffix\":\"\"},\"sex\":\"male\",\"birth_date\":\"1980-01-01\"}},\"programme_identifier\":[{\"programme_name\":\"HealthSupportProgram\",\"programme_code\":\"HSP001\"},{\"programme_name\":\"EducationAid\",\"programme_code\":\"EDU001\"}],\"enrollment_date\":\"2023-01-01T08:00:00Z\",\"enrollment_status\":\"active\",\"status_change_date\":[\"2023-01-01T08:00:00Z\"],\"benefits\":[{\"benefit_name\":\"HealthcareCoverage\",\"benefit_amount\":\"1000\",\"currency\":\"USD\",\"date_received\":\"2023-01-15\"},{\"benefit_name\":\"EducationalGrant\",\"benefit_amount\":\"500\",\"currency\":\"USD\",\"date_received\":\"2023-02-01\"}]}]},\"pagination\":{},\"locale\":\"en\"}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Search beneficiaries",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [
+                {
+                    "target": "body",
+                    "modifier": "transaction_id",
+                    "value": "123456789",
+                    "invert": false,
+                    "operator": "equals"
+                }
+            ],
+            "rulesOperator": "AND",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": false
+          }
+        ],
+        "enabled": true,
+        "responseMode": null,
+        "type": "http"
+      },
+      {
+        "uuid":"003b7330-926b-4b8b-9bf4-eabdd9733dff",
+        "documentation": "Beneficiaries enrollments updates",
+        "method": "post",
+        "endpoint": "sync/enrollment/updates",
+        "responses": [
+          {
+            "uuid": "e1e155cf-b6f8-43d7-2fg3-7dddbcfd9c13",
+            "body": "{\"message\":{\"ack_status\":\"ACK\",\"timestamp\":\"\",\"error\":{},\"correlation_id\":\"9876543210\"}}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Beneficiaries enrollments updates",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [
+                {
+                    "target": "body",
+                    "modifier": "transaction_id",
+                    "value": "123456789",
+                    "invert": false,
+                    "operator": "equals"
+                }
+            ],
+            "rulesOperator": "AND",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": false
+          }
+        ],
+        "enabled": true,
+        "responseMode": null,
+        "type": "http"
+      },
+      {
+        "uuid":"003b7331-926b-4b5b-9bf4-eabdd9733dff",
+        "documentation": "beneficiaries enrollments status",
+        "method": "post",
+        "endpoint": "sync/enrolled",
+        "responses": [
+          {
+            "uuid": "e1e15dcf-b6f8-43d7-2fg3-7dddbcfd9c13",
+            "body": "{\"message\":{\"ack_status\":\"yes\",\"timestamp\":\"\",\"error\":{},\"correlation_id\":\"9876543210\"}}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "beneficiaries enrollments status",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [
+                {
+                    "target": "body",
+                    "modifier": "transaction_id",
+                    "value": "123456789",
+                    "invert": false,
+                    "operator": "equals"
+                }
+            ],
+            "rulesOperator": "AND",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": false
+          }
+        ],
+        "enabled": true,
+        "responseMode": null,
+        "type": "http"
+      }
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "proxyRemovePrefix": false,
+    "tlsOptions": {
+      "enabled": false,
+      "type": "CERT",
+      "pfxPath": "",
+      "certPath": "",
+      "keyPath": "",
+      "caPath": "",
+      "passphrase": ""
+    },
+    "cors": true,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "proxyReqHeaders": [
+      {
+        "key": "",
+        "value": ""
+      }
+    ],
+    "proxyResHeaders": [
+      {
+        "key": "",
+        "value": ""
+      }
+    ],
+    "data": [],
+    "folders": [],
+    "rootChildren": [
+      {
+        "type": "route",
+        "uuid": "003b7329-926a-4b8b-9bf4-eabdd9733dff"
+      },
+      {
+        "type": "route",
+        "uuid": "003b7330-926b-4b8b-9bf4-eabdd9733dff"
+      },
+      {
+        "type":"route",
+        "uuid":"003b7331-926b-4b5b-9bf4-eabdd9733dff"
+      }
+    ]
+  }

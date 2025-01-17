@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<testsuite failures="0" skipped="0" name="cucumber-js" time="0.077444661" tests="1">
+  <testcase classname="Handover a batch of credit instructions to be processed" name="Successfully search beneficiaries to be processed smoke type test" time="0.077444661">
+    <system-out><![CDATA[Given System wanna search for beneficiaries...............................passed
+When POST request to search is sent.......................................passed
+Then The response from the search is received.............................passed
+And The search response should have status 200............................passed
+And The search response should have "Content-Type": "application/json" ...passed
+And The search response should match json schema..........................passed]]></system-out>
+  </testcase>
+</testsuite>
