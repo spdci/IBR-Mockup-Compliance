@@ -1,11 +1,30 @@
 <?xml version="1.0"?>
-<testsuite failures="0" skipped="0" name="cucumber-js" time="0.077444661" tests="1">
-  <testcase classname="Handover a batch of credit instructions to be processed" name="Successfully search beneficiaries to be processed smoke type test" time="0.077444661">
+<testsuite failures="0" skipped="0" name="cucumber-js" time="0.074925091" tests="3">
+  <testcase classname="check if bebeficiary enrolled in a program" name="Successfully check if beneficiary is enrolled in a program" time="0.033735008999999996">
+    <system-out><![CDATA[Given System wanna check beneficiary status in a program..................passed
+When POST request to check beneficiary status in a program is sent........passed
+Then The response from the enrolled is received...........................passed
+And The enrolled response should have status 200..........................passed
+And The enrolled response should have "Content-Type": "application/json...passed
+And The enrolled response should be returned in a timely manner 15000ms...passed
+And The enrolled response should match json schema........................passed]]></system-out>
+  </testcase>
+  <testcase classname="update / create beneficiaries in IBR" name="Successfully update beneficiaries smoke type test" time="0.012503814">
+    <system-out><![CDATA[Given System wanna update beneficiaries enrollments.......................passed
+When POST request to update or create beneficiaries is sent...............passed
+Then The response from the enrollment updates is received.................passed
+And The enrollment updates response should have status 200................passed
+And The enrollment updates response should have "Content-Type": "applic...passed
+And The enrollment updates response should be returned in a timely mann...passed
+And The enrollment updates response should match json schema..............passed]]></system-out>
+  </testcase>
+  <testcase classname="Search beneficiaries from IBR based on specific criteria" name="Successfully search beneficiaries to be processed smoke type test" time="0.028686268">
     <system-out><![CDATA[Given System wanna search for beneficiaries...............................passed
 When POST request to search is sent.......................................passed
 Then The response from the search is received.............................passed
 And The search response should have status 200............................passed
 And The search response should have "Content-Type": "application/json" ...passed
+And The search response should be returned in a timely manner 15000ms.....passed
 And The search response should match json schema..........................passed]]></system-out>
   </testcase>
 </testsuite>

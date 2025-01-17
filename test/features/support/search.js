@@ -5,7 +5,6 @@ import { Given, When, Then, Before } from '@cucumber/cucumber';
 import {
   localhost,
   defaultExpectedResponseTime,
-  contentTypeHeader,
   acceptHeader,
   searchEndpoint,
   searchResponseSchema,
@@ -41,7 +40,7 @@ When(/^POST request to search is sent$/, async function () {
       .post(baseUrl)
       .withHeaders(acceptHeader.key, acceptHeader.value);
     this.response = response; // Save response for validation in Then steps
-   
+
   } catch (err) {
     console.error("Request failed", err);
     throw err;
@@ -51,26 +50,29 @@ When(/^POST request to search is sent$/, async function () {
 
 // Then step: Ensure the response is received
 Then(/^The response from the search is received$/, async function () {
-  return chai.expect(this.response).to.exist; // Uncomment once debugged
+  chai.expect(this.response).to.exist; // Uncomment once debugged
 });
 
 
 // Then step: Validate the response status code
 Then(/^The search response should have status (\d+)$/, async  function(status)  {
-  console.log(this.response.statusCode)
-  
-  return chai.expect(this.response.statusCode).to.equal(status);
+  chai.expect(this.response.statusCode).to.equal(status);
 });
 
 // Then step: Validate header in the response
 Then(/^The search response should have "([^"]*)": "([^"]*)" header$/, async function(key, value) {
-  console.log(this.response.rawHeaders)
   chai.expect(this.response.rawHeaders).to.include(key);
   //chai.expect(this.response.rawHeaders).to.include(value);
 });
 
+// Then step: Validate response time
+Then(
+  /^The search response should be returned in a timely manner 15000ms$/, async function() {
+    chai.expect(this.response.responseTime).to.be.lessThan(defaultExpectedResponseTime);
+    //this.response.to.have.responseTimeLessThan(defaultExpectedResponseTime);
+  });
+
 // Then step: Validate JSON schema of the response
 Then(/^The search response should match json schema$/, async  function() {
-  console.log(this.response.body)
-  return chai.expect(this.response.body).to.be.jsonSchema(searchResponseSchema);
+  chai.expect(this.response.body).to.be.jsonSchema(searchResponseSchema);
 });
