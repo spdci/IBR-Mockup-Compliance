@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<testsuite failures="2" skipped="0" name="cucumber-js" time="0.09194604499999999" tests="6">
-  <testcase classname="check if bebeficiary enrolled in a program" name="Successfully check if beneficiary is enrolled in a program" time="0.046483043999999994">
+<testsuite failures="0" skipped="0" name="cucumber-js" time="0.22141838600000002" tests="6">
+  <testcase classname="check if bebeficiary enrolled in a program" name="Successfully check if beneficiary is enrolled in a program" time="0.099301608">
     <system-out><![CDATA[Given System wanna check beneficiary status in a program..................passed
 When POST request to check beneficiary status in a program is sent........passed
 Then The response from the enrolled is received...........................passed
@@ -9,7 +9,7 @@ And The enrolled response should have "Content-Type": "application/json...passed
 And The enrolled response should be returned in a timely manner 15000ms...passed
 And The enrolled response should match json schema........................passed]]></system-out>
   </testcase>
-  <testcase classname="update / create beneficiaries in IBR" name="Successfully update beneficiaries smoke type test" time="0.021578479999999997">
+  <testcase classname="update / create beneficiaries in IBR" name="Successfully update beneficiaries smoke type test" time="0.034912171">
     <system-out><![CDATA[Given System wanna update beneficiaries enrollments.......................passed
 When POST request to update or create beneficiaries is sent...............passed
 Then The response from the enrollment updates is received.................passed
@@ -18,27 +18,23 @@ And The enrollment updates response should have "Content-Type": "applic...passed
 And The enrollment updates response should be returned in a timely mann...passed
 And The enrollment updates response should match json schema..............passed]]></system-out>
   </testcase>
-  <testcase classname="Search beneficiaries from IBR based on specific criteria" name="Successfully search beneficiaries to be processed Smoke Test" time="0">
-    <failure/>
-    <system-out><![CDATA[Given System wants to search for beneficiaries Smoke Test..............undefined
-When A POST request to search is sent Smoke Test.......................undefined
-Then The response from the search should be received Smoke Test........undefined
-And The search response should have status 200 Smoke Test................skipped
-And The search response should have "Content-Type": "application/json"...skipped
-And The search response should be returned in a timely manner within...undefined
-And The search response should match the expected JSON schema Smoke ...undefined]]></system-out>
+  <testcase classname="Search beneficiaries from IBR based on specific criteria" name="Successfully search beneficiaries to be processed" time="0.027432604">
+    <system-out><![CDATA[Given System wants to search for beneficiaries............................passed
+When A POST request to search is sent.....................................passed
+Then The response from the search should be received......................passed
+And The search response should have status 200............................passed
+And The search response should have "Content-Type": "application/json" ...passed
+And The search response should be returned in a timely manner within 15...passed
+And The search response should match the expected JSON schema.............passed]]></system-out>
   </testcase>
-  <testcase classname="Search beneficiaries from IBR based on specific criteria" name="Validate the structure of &quot;reg_records&quot; in search response Functional Test" time="0.00114039">
-    <failure/>
-    <system-out><![CDATA[Given System has sent a search request for beneficiaries Functional Tes...passed
-When A POST request to search is sent Functional Test..................undefined
-Then The response from the search should be received Functional Test...undefined
-And The search response should have status 200 Functional Test...........skipped
-And The search response should have "Content-Type": "application/json"...skipped
-And The search response should contain a "reg_records" array Functiona...skipped
-And Each item in the "reg_records" array should match the defined JSON...skipped]]></system-out>
+  <testcase classname="Search beneficiaries from IBR based on specific criteria" name="Validate the structure of reg_records in search response Functional Test" time="0.020945849000000002">
+    <system-out><![CDATA[Given System has sent a search request for beneficiaries for a function...passed
+When A POST request to search is sent Functional Test.....................passed
+Then The response from the search should be received Functional Test......passed
+And The search response should contain a reg_records array Functional T...passed
+And Each item in the reg_records array should match the defined JSON sc...passed]]></system-out>
   </testcase>
-  <testcase classname="Subscribe To IBR based on specific criteria" name="Successfully subscribe to get new beneficiaries enrollment to be processed smoke type test" time="0.011891082">
+  <testcase classname="Subscribe To IBR based on specific criteria" name="Successfully subscribe to get new beneficiaries enrollment to be processed smoke type test" time="0.022883769999999998">
     <system-out><![CDATA[Given System wanna subscribe to get new enrollments for beneficiaries.....passed
 When POST request to subscribe is sent....................................passed
 Then The response from the subscribe is received..........................passed
@@ -47,7 +43,7 @@ And The subscribe response should have "Content-Type": "application/jso...passed
 And The subscribe response should be returned in a timely manner 15000m...passed
 And The subscribe response should match json schema.......................passed]]></system-out>
   </testcase>
-  <testcase classname="Unsubscribe from IBR based on specific criteria" name="Successfully unsubscribe from IBR to be processed smoke type test" time="0.010853048999999998">
+  <testcase classname="Unsubscribe from IBR based on specific criteria" name="Successfully unsubscribe from IBR to be processed smoke type test" time="0.015942384">
     <system-out><![CDATA[Given System wanna unsubscribe from IBR...................................passed
 When POST request to unsubscribe is sent..................................passed
 Then The response from the unsubscribe is received........................passed
