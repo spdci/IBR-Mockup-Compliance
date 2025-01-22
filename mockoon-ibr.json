@@ -15,7 +15,7 @@
         "responses": [
           {
             "uuid": "e14155cf-b6f8-4367-2fg3-7dddba2d9c13",
-            "body": "{\"reference_id\":\"12345678901234567890\",\"timestamp\":\"\",\"status\":\"rcvd\",\"status_reason_code\":\"rjct.reference_id.invalid\",\"status_reason_message\":\"string\",\"data\":{\"version\":\"1.0.0\",\"reg_records\":[{\"assistance_unit\":\"member\",\"member\":{\"@type\":\"Member\",\"member_identifier\":[{\"identifier_type\":\"NationalID\",\"identifier_value\":\"1234567890\"}],\"demographic_info\":{\"@type\":\"Person\",\"identifier\":[{\"@type\":\"Identifier\",\"identifier_type\":\"NationalID\",\"identifier_value\":\"1234567890\"}],\"name\":{\"@type\":\"Name\",\"surname\":\"Doe\",\"given_name\":\"John\",\"prefix\":\"Mr.\",\"suffix\":\"\"},\"sex\":\"male\",\"birth_date\":\"1980-01-01\"}},\"programme_identifier\":[{\"programme_name\":\"HealthSupportProgram\",\"programme_code\":\"HSP001\"},{\"programme_name\":\"EducationAid\",\"programme_code\":\"EDU001\"}],\"enrollment_date\":\"2023-01-01T08:00:00Z\",\"enrollment_status\":\"active\",\"status_change_date\":[\"2023-01-01T08:00:00Z\"],\"benefits\":[{\"benefit_name\":\"HealthcareCoverage\",\"benefit_amount\":\"1000\",\"currency\":\"USD\",\"date_received\":\"2023-01-15\"},{\"benefit_name\":\"EducationalGrant\",\"benefit_amount\":\"500\",\"currency\":\"USD\",\"date_received\":\"2023-02-01\"}]}]},\"pagination\":{},\"locale\":\"en\"}",
+            "body": "{\"reference_id\":\"12345678901234567890\",\"timestamp\":\"\",\"status\":\"rcvd\",\"status_reason_code\":\"rjct.reference_id.invalid\",\"status_reason_message\":\"string\",\"data\":{\"version\":\"1.0.0\",\"reg_records\":[{\"assistance_unit\":\"member\",\"member\":{\"@type\":\"Member\",\"member_identifier\":[{\"identifier_type\":\"UIN\",\"identifier_value\":\"1234567890\"}],\"demographic_info\":{\"@type\":\"Person\",\"identifier\":[{\"@type\":\"Identifier\",\"identifier_type\":\"UIN\",\"identifier_value\":\"1234567890\"}],\"name\":{\"@type\":\"Name\",\"surname\":\"Doe\",\"given_name\":\"John\",\"prefix\":\"Mr.\",\"suffix\":\"\"},\"sex\":\"male\",\"birth_date\":\"1980-01-01\"}},\"programme_identifier\":[{\"programme_name\":\"HealthSupportProgram\",\"programme_code\":\"HSP001\"},{\"programme_name\":\"EducationAid\",\"programme_code\":\"EDU001\"}],\"enrollment_date\":\"2023-01-01T08:00:00Z\",\"enrollment_status\":\"active\",\"status_change_date\":[\"2023-01-01T08:00:00Z\"],\"benefits\":[{\"benefit_name\":\"HealthcareCoverage\",\"benefit_amount\":\"1000\",\"currency\":\"USD\",\"date_received\":\"2023-01-15\"},{\"benefit_name\":\"EducationalGrant\",\"benefit_amount\":\"500\",\"currency\":\"USD\",\"date_received\":\"2023-02-01\"}]}]},\"pagination\":{},\"locale\":\"en\"}",
             "latency": 0,
             "statusCode": 200,
             "label": "Search beneficiaries",
@@ -129,6 +129,88 @@
         "enabled": true,
         "responseMode": null,
         "type": "http"
+      },
+      {
+        "uuid":"004a7331-926b-4b5b-9bf4-eabdd9733dff",
+        "documentation": "subscribe to an event",
+        "method": "post",
+        "endpoint": "subscribe",
+        "responses": [
+          {
+            "uuid": "e1e15dcf-b6f8-43d7-2fg3-7dddbcfd9c13",
+            "body": "{\"message\":{\"ack_status\":\"ACK\",\"timestamp\":\"\",\"error\":{\"code\":\"err.request.bad\",\"message\":\"string\"},\"correlation_id\":\"9876543210\"}}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "subscribe to specific event",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [
+                {
+                    "target": "body",
+                    "modifier": "transaction_id",
+                    "value": "123456789",
+                    "invert": false,
+                    "operator": "equals"
+                }
+            ],
+            "rulesOperator": "AND",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": false
+          }
+        ],
+        "enabled": true,
+        "responseMode": null,
+        "type": "http"
+      },
+      {
+        "uuid":"004a8431-926b-4b5b-9bf4-eabdd9733dff",
+        "documentation": "subscribe to an event",
+        "method": "post",
+        "endpoint": "unsubscribe",
+        "responses": [
+          {
+            "uuid": "e1e14rcf-b6f8-43d7-2fg3-7dddbcfd9c13",
+            "body": "{\"message\":{\"ack_status\":\"ACK\",\"timestamp\":\"\",\"error\":{\"code\":\"err.request.bad\",\"message\":\"string\"},\"correlation_id\":\"9876543210\"}}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "subscribe to specific event",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [
+                {
+                    "target": "body",
+                    "modifier": "transaction_id",
+                    "value": "123456789",
+                    "invert": false,
+                    "operator": "equals"
+                }
+            ],
+            "rulesOperator": "AND",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": false
+          }
+        ],
+        "enabled": true,
+        "responseMode": null,
+        "type": "http"
       }
     ],
     "proxyMode": false,
@@ -176,6 +258,14 @@
       {
         "type":"route",
         "uuid":"003b7331-926b-4b5b-9bf4-eabdd9733dff"
+      },
+      {
+        "type":"route",
+        "uuid":"004a7331-926b-4b5b-9bf4-eabdd9733dff"
+      },
+      {
+        "type":"route",
+        "uuid":"004a8431-926b-4b5b-9bf4-eabdd9733dff"
       }
     ]
   }

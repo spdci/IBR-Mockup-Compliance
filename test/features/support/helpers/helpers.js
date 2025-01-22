@@ -67,3 +67,121 @@ export const enrolledResponseSchema = {
     },
   },
 };
+export const subscribeEndpoint = 'subscribe'
+export const subscribeResponseSchema = {
+  type: 'object',
+  required: ['message'],
+  properties: {
+    message: {
+      type: 'object',
+      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      properties: {
+        ack_status: { type: 'string' },
+        timestamp: { type: 'string' },
+        error: { type: 'object' },
+        correlation_id: { type: 'string' },
+      },
+      additionalProperties: false,
+    },
+  },
+};
+export const unsubscribeEndpoint = 'unsubscribe'
+export const unsubscribeResponseSchema = {
+  type: 'object',
+  required: ['message'],
+  properties: {
+    message: {
+      type: 'object',
+      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      properties: {
+        ack_status: { type: 'string' },
+        timestamp: { type: 'string' },
+        error: { type: 'object' },
+        correlation_id: { type: 'string' },
+      },
+      additionalProperties: false,
+    },
+  },
+};
+
+// Define the schema for validation
+export const regRecordsSchema = {
+    type: "object",
+    properties: {
+      assistance_unit: { type: "string" },
+      member: {
+        type: "object",
+        properties: {
+          "@type": { type: "string", const: "Member" },
+          member_identifier: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                identifier_type: { type: "string" },
+                identifier_value: { type: "string" }
+              }
+            }
+          },
+          demographic_info: {
+            type: "object",
+            properties: {
+              "@type": { type: "string", const: "Person" },
+              identifier: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    "@type": { type: "string", const: "Identifier" },
+                    identifier_type: { type: "string" },
+                    identifier_value: { type: "string" }
+                  }
+                }
+              },
+              name: {
+                type: "object",
+                properties: {
+                  "@type": { type: "string", const: "Name" },
+                  surname: { type: "string" },
+                  given_name: { type: "string" },
+                  prefix: { type: "string" },
+                  suffix: { type: "string" }
+                }
+              },
+              sex: { type: "string", enum: ["male", "female", "other"] },
+              birth_date: { type: "string", format: "date" }
+            }
+          }
+        }
+      },
+      programme_identifier: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            programme_name: { type: "string" },
+            programme_code: { type: "string" }
+          }
+        }
+      },
+      enrollment_date: { type: "string", format: "date-time" },
+      enrollment_status: { type: "string", enum: ["active", "inactive"] },
+      status_change_date: {
+        type: "array",
+        items: { type: "string", format: "date-time" }
+      },
+      benefits: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            benefit_name: { type: "string" },
+            benefit_amount: { type: "string", pattern: "^\\d+(\\.\\d{1,2})?$" },
+            currency: { type: "string" },
+            date_received: { type: "string", format: "date" }
+          }
+        }
+      }
+    }
+};
+
