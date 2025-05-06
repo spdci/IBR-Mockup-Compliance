@@ -1,4 +1,4 @@
-@method=POST @endpoint=/sync/enrolled
+@method=POST @endpoint=ibr/sync/enrolled
 Feature: check if bebeficiary enrolled in a program 
 
 This API is to be exposed by the IBR.

@@ -1,4 +1,4 @@
-@method=POST @endpoint=/subscribe
+@method=POST @endpoint=ibr/subscribe
 Feature: Subscribe To IBR based on specific criteria
 
 This API is to be exposed by the IBR.

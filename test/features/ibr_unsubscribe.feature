@@ -1,4 +1,4 @@
-@method=POST @endpoint=/unsubscribe
+@method=POST @endpoint=ibr/unsubscribe
 Feature: Unsubscribe from IBR based on specific criteria
 
 This API is to be exposed by the IBR.

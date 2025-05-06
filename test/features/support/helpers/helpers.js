@@ -9,7 +9,7 @@ export const contentTypeHeader = {
   key: 'content-type',
   value: 'application/json; charset=utf-8',
 };
-export const searchEndpoint = 'sync/search';
+export const searchEndpoint = 'ibr/sync/search';
 export const searchResponseSchema = {
   type: 'object',
   required: ['reference_id', 'status', 'data', 'locale'],
@@ -31,7 +31,7 @@ export const searchResponseSchema = {
     locale: { type: 'string' },
   },
 };
-export const enrollmentUpdatesEndpoint = 'sync/enrollment/updates'
+export const enrollmentUpdatesEndpoint = 'ibr/sync/enrollment/updates'
 export const enrollmentUpdatesResponseSchema = {
   type: 'object',
   required: ['message'],
@@ -49,7 +49,7 @@ export const enrollmentUpdatesResponseSchema = {
     },
   },
 };
-export const enrolledEndpoint = 'sync/enrolled'
+export const enrolledEndpoint = 'ibr/sync/enrolled'
 export const enrolledResponseSchema = {
   type: 'object',
   required: ['message'],
@@ -67,7 +67,7 @@ export const enrolledResponseSchema = {
     },
   },
 };
-export const subscribeEndpoint = 'subscribe'
+export const subscribeEndpoint = 'ibr/subscribe'
 export const subscribeResponseSchema = {
   type: 'object',
   required: ['message'],
@@ -85,7 +85,7 @@ export const subscribeResponseSchema = {
     },
   },
 };
-export const unsubscribeEndpoint = 'unsubscribe'
+export const unsubscribeEndpoint = 'ibr/unsubscribe'
 export const unsubscribeResponseSchema = {
   type: 'object',
   required: ['message'],
@@ -185,3 +185,166 @@ export const regRecordsSchema = {
     }
 };
 
+
+export const asyncsearchEndpoint = 'ibr/search';
+export const asyncsearchResponseSchema ={
+  type: 'object',
+  required: ['transaction_id', 'correlation_id', 'search_response'],
+  properties: {
+    transaction_id: { type: 'integer' },
+    correlation_id: { type: 'string' },
+    search_response: {
+      type: 'object',
+      required: ['status', 'message'],
+      properties: {
+        status: { type: 'string'},
+        message: { type: 'string' }
+      }
+    }
+  }
+};
+
+
+export const onsearchEndpoint= 'ibr/on-search';
+export const onsearchResponseSchema = {
+  type: 'object',
+  required: ['message'],
+  properties: {
+    message: {
+      type: 'object',
+      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      properties: {
+        ack_status: { type: 'string' },
+        timestamp: { type: 'string' },
+        error: { type: 'object' },
+        correlation_id: { type: 'string' },
+      },
+      additionalProperties: false,
+    },
+  },
+};
+export const onsearchRequestSchema = {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "message": {
+        "type": "object",
+        "properties": {
+          "transaction_id": { "type": "integer" },
+          "correlation_id": { "type": "string" },
+          "search_response": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "reference_id": { "type": "string" },
+                "timestamp": { "type": "string" },
+                "status": { "type": "string", "enum": ["rcvd", "processed", "failed"] },
+                "status_reason_code": { "type": "string" },
+                "status_reason_message": { "type": "string" },
+                "data": { "type": "object" },
+                "pagination": { "type": "object" },
+                "locale": { "type": "string", "enum": ["en", "fr", "ar"] }
+              }
+            }
+          }
+        },
+        "required": ["transaction_id", "correlation_id", "search_response"]
+      }
+    },
+    "required": ["message"]
+    
+}
+
+export const onsubscribeEndpoint = 'ibr/on-subscribe';
+export const onsubscribeResponseSchema =  {
+  type: 'object',
+  required: ['message'],
+  properties: {
+    message: {
+      type: 'object',
+      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      properties: {
+        ack_status: { type: 'string' },
+        timestamp: { type: 'string' },
+        error: { type: 'object' },
+        correlation_id: { type: 'string' },
+      },
+      additionalProperties: false,
+    },
+  },
+};
+
+export const onunsubscribeEndpoint = 'ibr/on-unsubscribe';
+export const onunsubscribeResponseSchema =  {
+  type: 'object',
+  required: ['message'],
+  properties: {
+    message: {
+      type: 'object',
+      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      properties: {
+        ack_status: { type: 'string' },
+        timestamp: { type: 'string' },
+        error: { type: 'object' },
+        correlation_id: { type: 'string' },
+      },
+      additionalProperties: false,
+    },
+  },
+};
+
+export const txnstatusEndpoint = 'ibr/sync/txn/status';
+export const txnstatusResponseSchema = {
+  type: 'object',
+  required: ['transaction_id', 'correlation_id', 'txnstatus_response'],
+  properties: {
+    transaction_id: { type: 'integer' },
+    correlation_id: { type: 'string' },
+    txnstatus_response: {
+      type: 'object',
+      properties: {
+        transaction_id: { type: 'integer' },
+        correlation_id: { type: 'string', maxLength: 99 },
+      }
+    },
+  }
+};
+
+export const asynctxnstatusEndpoint = 'ibr/txn/status';
+export const asynctxnstatusResponseSchema =  {
+  type: 'object',
+  required: ['message'],
+  properties: {
+    message: {
+      type: 'object',
+      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      properties: {
+        ack_status: { type: 'string' },
+        timestamp: { type: 'string' },
+        error: { type: 'object' },
+        correlation_id: { type: 'string' },
+      },
+      additionalProperties: false,
+    },
+  },
+};
+
+export const ontxnstatusEndpoint = 'ibr/txn/on-status';
+export const ontxnstatusResponseSchema =  {
+  type: 'object',
+  required: ['message'],
+  properties: {
+    message: {
+      type: 'object',
+      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      properties: {
+        ack_status: { type: 'string' },
+        timestamp: { type: 'string' },
+        error: { type: 'object' },
+        correlation_id: { type: 'string' },
+      },
+      additionalProperties: false,
+    },
+  },
+};

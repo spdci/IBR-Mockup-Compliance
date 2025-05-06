@@ -1,7 +1,7 @@
 {
     "uuid": "e94a4170-6ef6-4b0a-978d-be91893e9a64",
     "lastMigration": 27,
-    "name": "PaymentsBBVoucherAPI",
+    "name": "IBRInteroperability",
     "endpointPrefix": "",
     "latency": 0,
     "port": 3003,
@@ -9,16 +9,379 @@
     "routes": [
       {
         "uuid":"003b7329-926a-4b8b-9bf4-eabdd9733dff",
-        "documentation": "Search beneficiaries",
+        "documentation": "Search specific person",
         "method": "post",
-        "endpoint": "sync/search",
+        "endpoint": "ibr/sync/search",
+        "request": {
+          "body": {
+            "identifier_value": "M123456"  
+          },
+          "rules": [
+            {
+              "key": "body.identifier_value",
+              "operator": "exists",
+              "value": "true"
+            },
+            {
+              "key": "body.identifier_value",
+              "operator": "matches",
+              "value": "^[0-9]{9}$" 
+            }
+          ],
+          "rulesOperator": "AND"
+        },
         "responses": [
           {
             "uuid": "e14155cf-b6f8-4367-2fg3-7dddba2d9c13",
             "body": "{\"reference_id\":\"12345678901234567890\",\"timestamp\":\"\",\"status\":\"rcvd\",\"status_reason_code\":\"rjct.reference_id.invalid\",\"status_reason_message\":\"string\",\"data\":{\"version\":\"1.0.0\",\"reg_records\":[{\"assistance_unit\":\"member\",\"member\":{\"@type\":\"Member\",\"member_identifier\":[{\"identifier_type\":\"UIN\",\"identifier_value\":\"1234567890\"}],\"demographic_info\":{\"@type\":\"Person\",\"identifier\":[{\"@type\":\"Identifier\",\"identifier_type\":\"UIN\",\"identifier_value\":\"1234567890\"}],\"name\":{\"@type\":\"Name\",\"surname\":\"Doe\",\"given_name\":\"John\",\"prefix\":\"Mr.\",\"suffix\":\"\"},\"sex\":\"male\",\"birth_date\":\"1980-01-01\"}},\"programme_identifier\":[{\"programme_name\":\"HealthSupportProgram\",\"programme_code\":\"HSP001\"},{\"programme_name\":\"EducationAid\",\"programme_code\":\"EDU001\"}],\"enrollment_date\":\"2023-01-01T08:00:00Z\",\"enrollment_status\":\"active\",\"status_change_date\":[\"2023-01-01T08:00:00Z\"],\"benefits\":[{\"benefit_name\":\"HealthcareCoverage\",\"benefit_amount\":\"1000\",\"currency\":\"USD\",\"date_received\":\"2023-01-15\"},{\"benefit_name\":\"EducationalGrant\",\"benefit_amount\":\"500\",\"currency\":\"USD\",\"date_received\":\"2023-02-01\"}]}]},\"pagination\":{},\"locale\":\"en\"}",
             "latency": 0,
             "statusCode": 200,
-            "label": "Search beneficiaries",
+            "label": "Search IBR",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "key": "body",
+                "operator": "contains",
+                "value": "\"identifier_value\": \"847951632\""
+              }
+            ],
+            "rulesOperator": "AND",
+            "disableTemplating": false,
+            "fallbackTo404": true,
+            "default": false
+          }      
+        ],
+        "enabled": true,
+        "responseMode": null,
+        "type": "http"
+      },
+      {
+        "uuid":"003b7339-926a-4b8b-9bf4-eabdd9733dff",
+        "documentation": "Get transaction status",
+        "method": "post",
+        "endpoint": "ibr/sync/txn/status",
+        "responses": [
+          {
+            "uuid": "e14155cf-b6f8-4367-2fg3-7dddba2d9c13",
+            "body": "{\n    \"transaction_id\": 123456789,\n    \"correlation_id\": \"9876543210\",\n    \"txnstatus_response\": {\n      \"type\": \"object\",\n      \"description\": \"Response to search request. Multiple repsonses for each page can be pushed to the caller as an implementation!\",\n      \"properties\": {\n        \"transaction_id\": {\n          \"$ref\": \"#/components/schemas/TransactionId\"\n        },\n        \"correlation_id\": {\n          \"description\": \"1. correlation_id acknowledged by end txn processing system (i.e receiver) to co-relate all related requests in the context of a business transaction.\\n2. correlation_id uniqueness is ensured by txn processing system (i.e receiver)\\n\",\n          \"type\": \"string\",\n          \"maxLength\": 99,\n          \"example\": \"9876543210\"\n        },\n        \"search_response\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"reference_id\": {\n                \"$ref\": \"#/components/schemas/ReferenceId\"\n              },\n              \"timestamp\": {\n                \"$ref\": \"#/components/schemas/DateTime\"\n              },\n              \"status\": {\n                \"$ref\": \"#/components/schemas/RequestStatus\"\n              },\n              \"status_reason_code\": {\n                \"$ref\": \"#/components/schemas/SearchStatusReasonCode\"\n              },\n              \"status_reason_message\": {\n                \"description\": \"Status reason code message. Helps actionanble messaging for systems/end users\",\n                \"type\": \"string\",\n                \"maxLength\": 999\n              },\n              \"data\": {\n                \"type\": \"object\",\n                \"description\": \"Search result record as an outcome of search/subscribe action\\n\",\n                \"properties\": {\n                  \"version\": {\n                    \"type\": \"string\",\n                    \"default\": \"1.0.0\"\n                  },\n                  \"reg_type\": {\n                    \"$ref\": \"#/components/schemas/RegistryType\"\n                  },\n                  \"reg_event_type\": {\n                    \"$ref\": \"#/components/schemas/RegistryEventType\"\n                  },\n                  \"reg_record_type\": {\n                    \"$ref\": \"#/components/schemas/RegistryRecordType\"\n                  },\n                  \"reg_records\": {\n                    \"$ref\": \"#/components/schemas/RegistryRecord\"\n                  }\n                },\n                \"required\": [\n                  \"reg_record_type\",\n                  \"reg_records\"\n                ]\n              },\n              \"pagination\": {\n                \"$ref\": \"#/components/schemas/Pagination\"\n              },\n              \"locale\": {\n                \"$ref\": \"#/components/schemas/LanguageCode\"\n              }\n            },\n            \"required\": [\n              \"reference_id\",\n              \"timestamp\",\n              \"status\"\n            ]\n          }\n        }\n      },\n      \"required\": [\n        \"transaction_id\",\n        \"correlation_id\",\n        \"search_response\"\n      ]\n    }\n  }\n",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "search transaction status",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [
+                
+            ],
+            "rulesOperator": "AND",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": false
+          }
+        ],
+        "enabled": true,
+        "responseMode": null,
+        "type": "http"
+      },
+      {
+        "uuid": "003b7340-926b-4b8b-9bf4-eabdd9733dff",
+        "documentation": "Async search",
+        "method": "post",
+        "endpoint": "ibr/search",
+        "responses": [
+          {
+            "uuid": "e14155cf-b6f8-4367-2fg3-7dddba2d9c14",
+            "body": "{\n  \"transaction_id\": 134567890,\n  \"correlation_id\": \"9876543210\",\n  \"search_response\": {\n    \"status\": \"pending\",\n    \"message\": \"Search request is being processed asynchronously.\"\n  }\n}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Async search initiated",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "AND",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": false
+          }
+        ],
+        "enabled": true,
+        "responseMode": null,
+        "type": "http"
+      },
+      {
+        "uuid": "003b7341-926b-4b8b-9bf4-eabdd9733dff",
+        "documentation": "Async on-search",
+        "method": "post",
+        "endpoint": "ibr/on-search",
+        "responses": [
+          {
+            "uuid": "e14155cf-b6f8-4367-2fg3-7dddba2d9c15",
+            "body": "{\n  \"message\": {\n    \"ack_status\": \"ACK\",\n    \"timestamp\": \"\",\n    \"error\": {\n      \"code\": \"err.request.bad\",\n      \"message\": \"string\"\n    },\n    \"correlation_id\": \"9876543210\"\n  }\n}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Async search result",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "AND",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": false
+          }
+        ],
+        "enabled": true,
+        "responseMode": null,
+        "type": "http"
+      },
+      {
+        "uuid":"004a7331-926b-4b5b-9bf4-eabdd9733dff",
+        "documentation": "subscribe to an event",
+        "method": "post",
+        "endpoint": "ibr/subscribe",
+        "responses": [
+          {
+            "uuid": "e1e15dcf-b6f8-43d7-2fg3-7dddbcfd9c13",
+            "body": "{\"message\":{\"ack_status\":\"ACK\",\"timestamp\":\"\",\"error\":{\"code\":\"err.request.bad\",\"message\":\"string\"},\"correlation_id\":\"9876543210\"}}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "subscribe to specific event",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [
+                {
+                    "target": "body",
+                    "modifier": "transaction_id",
+                    "value": "123456789",
+                    "invert": false,
+                    "operator": "equals"
+                }
+            ],
+            "rulesOperator": "AND",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": false
+          }
+        ],
+        "enabled": true,
+        "responseMode": null,
+        "type": "http"
+      },
+      {
+        "uuid":"004a8331-926b-4b5b-9bf4-eabdd9733dff",
+        "documentation": "callback for subscribe to an event",
+        "method": "post",
+        "endpoint": "ibr/on-subscribe",
+        "responses": [
+          {
+            "uuid": "e1e15dcf-b6f8-43d7-2fg3-7dddbcfd9c13",
+            "body": "{\"message\":{\"ack_status\":\"ACK\",\"timestamp\":\"\",\"error\":{\"code\":\"err.request.bad\",\"message\":\"string\"},\"correlation_id\":\"9876543210\"}}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "subscribe to specific event",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [
+                {
+                    "target": "body",
+                    "modifier": "transaction_id",
+                    "value": "123456789",
+                    "invert": false,
+                    "operator": "equals"
+                }
+            ],
+            "rulesOperator": "AND",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": false
+          }
+        ],
+        "enabled": true,
+        "responseMode": null,
+        "type": "http"
+      },
+      {
+        "uuid":"004a8431-926b-4b5b-9bf4-eabdd9733dff",
+        "documentation": "unsubscribe from an event",
+        "method": "post",
+        "endpoint": "ibr/unsubscribe",
+        "responses": [
+          {
+            "uuid": "e1e14rcf-b6f8-43d7-2fg3-7dddbcfd9c13",
+            "body": "{\"message\":{\"ack_status\":\"ACK\",\"timestamp\":\"\",\"error\":{\"code\":\"err.request.bad\",\"message\":\"string\"},\"correlation_id\":\"9876543210\"}}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "subscribe to specific event",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [
+                {
+                    "target": "body",
+                    "modifier": "transaction_id",
+                    "value": "123456789",
+                    "invert": false,
+                    "operator": "equals"
+                }
+            ],
+            "rulesOperator": "AND",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": false
+          }
+        ],
+        "enabled": true,
+        "responseMode": null,
+        "type": "http"
+      },
+      {
+        "uuid":"004a8431-926b-4b5b-9bf4-eabdd9733dff",
+        "documentation": "on unsubscribe from an event",
+        "method": "post",
+        "endpoint": "ibr/on-unsubscribe",
+        "responses": [
+          {
+            "uuid": "e1e14rcf-b6f8-43d7-2fg3-7dddbcfd9c13",
+            "body": "{\"message\":{\"ack_status\":\"ACK\",\"timestamp\":\"\",\"error\":{\"code\":\"err.request.bad\",\"message\":\"string\"},\"correlation_id\":\"9876543210\"}}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "subscribe to specific event",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [
+                {
+                    "target": "body",
+                    "modifier": "transaction_id",
+                    "value": "123456789",
+                    "invert": false,
+                    "operator": "equals"
+                }
+            ],
+            "rulesOperator": "AND",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": false
+          }
+        ],
+        "enabled": true,
+        "responseMode": null,
+        "type": "http"
+      },
+      {
+        "uuid":"004a9431-926b-4b5b-9bf4-eabdd9733dff",
+        "documentation": "on checking a transaction status (callback)",
+        "method": "post",
+        "endpoint": "ibr/txn/on-status",
+        "responses": [
+          {
+            "uuid": "e1e14rcf-b6f8-43d7-2fg3-7dddbcfd9c13",
+            "body": "{\"message\":{\"ack_status\":\"ACK\",\"timestamp\":\"\",\"error\":{\"code\":\"err.request.bad\",\"message\":\"string\"},\"correlation_id\":\"9876543210\"}}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "subscribe to specific event",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [
+                {
+                    "target": "body",
+                    "modifier": "transaction_id",
+                    "value": "123456789",
+                    "invert": false,
+                    "operator": "equals"
+                }
+            ],
+            "rulesOperator": "AND",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": false
+          }
+        ],
+        "enabled": true,
+        "responseMode": null,
+        "type": "http"
+      },
+      {
+        "uuid":"004a9431-926b-5b5b-9bf4-eabdd9733dff",
+        "documentation": "checking a transaction status",
+        "method": "post",
+        "endpoint": "ibr/txn/status",
+        "responses": [
+          {
+            "uuid": "e1e14rcf-b6f8-43d7-2fg3-7dddbcfd9c13",
+            "body": "{\"message\":{\"ack_status\":\"ACK\",\"timestamp\":\"\",\"error\":{\"code\":\"err.request.bad\",\"message\":\"string\"},\"correlation_id\":\"9876543210\"}}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "subscribe to specific event",
             "headers": [
               {
                 "key": "Content-Type",
@@ -52,7 +415,7 @@
         "uuid":"003b7330-926b-4b8b-9bf4-eabdd9733dff",
         "documentation": "Beneficiaries enrollments updates",
         "method": "post",
-        "endpoint": "sync/enrollment/updates",
+        "endpoint": "ibr/sync/enrollment/updates",
         "responses": [
           {
             "uuid": "e1e155cf-b6f8-43d7-2fg3-7dddbcfd9c13",
@@ -93,7 +456,7 @@
         "uuid":"003b7331-926b-4b5b-9bf4-eabdd9733dff",
         "documentation": "beneficiaries enrollments status",
         "method": "post",
-        "endpoint": "sync/enrolled",
+        "endpoint": "ibr/sync/enrolled",
         "responses": [
           {
             "uuid": "e1e15dcf-b6f8-43d7-2fg3-7dddbcfd9c13",
@@ -101,88 +464,6 @@
             "latency": 0,
             "statusCode": 200,
             "label": "beneficiaries enrollments status",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "bodyType": "INLINE",
-            "filePath": "",
-            "databucketID": "",
-            "sendFileAsBody": false,
-            "rules": [
-                {
-                    "target": "body",
-                    "modifier": "transaction_id",
-                    "value": "123456789",
-                    "invert": false,
-                    "operator": "equals"
-                }
-            ],
-            "rulesOperator": "AND",
-            "disableTemplating": false,
-            "fallbackTo404": false,
-            "default": false
-          }
-        ],
-        "enabled": true,
-        "responseMode": null,
-        "type": "http"
-      },
-      {
-        "uuid":"004a7331-926b-4b5b-9bf4-eabdd9733dff",
-        "documentation": "subscribe to an event",
-        "method": "post",
-        "endpoint": "subscribe",
-        "responses": [
-          {
-            "uuid": "e1e15dcf-b6f8-43d7-2fg3-7dddbcfd9c13",
-            "body": "{\"message\":{\"ack_status\":\"ACK\",\"timestamp\":\"\",\"error\":{\"code\":\"err.request.bad\",\"message\":\"string\"},\"correlation_id\":\"9876543210\"}}",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "subscribe to specific event",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "bodyType": "INLINE",
-            "filePath": "",
-            "databucketID": "",
-            "sendFileAsBody": false,
-            "rules": [
-                {
-                    "target": "body",
-                    "modifier": "transaction_id",
-                    "value": "123456789",
-                    "invert": false,
-                    "operator": "equals"
-                }
-            ],
-            "rulesOperator": "AND",
-            "disableTemplating": false,
-            "fallbackTo404": false,
-            "default": false
-          }
-        ],
-        "enabled": true,
-        "responseMode": null,
-        "type": "http"
-      },
-      {
-        "uuid":"004a8431-926b-4b5b-9bf4-eabdd9733dff",
-        "documentation": "subscribe to an event",
-        "method": "post",
-        "endpoint": "unsubscribe",
-        "responses": [
-          {
-            "uuid": "e1e14rcf-b6f8-43d7-2fg3-7dddbcfd9c13",
-            "body": "{\"message\":{\"ack_status\":\"ACK\",\"timestamp\":\"\",\"error\":{\"code\":\"err.request.bad\",\"message\":\"string\"},\"correlation_id\":\"9876543210\"}}",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "subscribe to specific event",
             "headers": [
               {
                 "key": "Content-Type",
@@ -252,12 +533,16 @@
         "uuid": "003b7329-926a-4b8b-9bf4-eabdd9733dff"
       },
       {
-        "type": "route",
-        "uuid": "003b7330-926b-4b8b-9bf4-eabdd9733dff"
+        "type":"route",
+        "uuid": "003b7339-926a-4b8b-9bf4-eabdd9733dff"
       },
       {
         "type":"route",
-        "uuid":"003b7331-926b-4b5b-9bf4-eabdd9733dff"
+        "uuid":"003b7340-926b-4b8b-9bf4-eabdd9733dff"
+      },
+      {
+        "type":"route",
+        "uuid":"003b7341-926b-4b8b-9bf4-eabdd9733dff"
       },
       {
         "type":"route",
@@ -265,7 +550,27 @@
       },
       {
         "type":"route",
+        "uuid":"004a8331-926b-4b5b-9bf4-eabdd9733dff"
+      },
+      {
+        "type":"route",
         "uuid":"004a8431-926b-4b5b-9bf4-eabdd9733dff"
+      },
+      {
+        "type":"route",
+        "uuid":"004a9431-926b-4b5b-9bf4-eabdd9733dff"
+      },
+      {
+        "type":"route",
+        "uuid":"004a9431-926b-5b5b-9bf4-eabdd9733dff"
+      },
+      {
+        "type":"route",
+        "uuid":"003b7330-926b-4b8b-9bf4-eabdd9733dff"
+      },
+      {
+        "type":"route",
+        "uuid":"003b7331-926b-4b5b-9bf4-eabdd9733dff"
       }
     ]
   }

@@ -1,4 +1,4 @@
-@method=POST @endpoint=/sync/enrollment/updates
+@method=POST @endpoint=ibr/sync/enrollment/updates
 Feature: update / create beneficiaries in IBR 
 
 This API is to be exposed by the IBR.
