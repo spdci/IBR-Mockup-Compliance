@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<testsuite failures="0" skipped="0" name="cucumber-js" time="0.20826363800000003" tests="13">
-  <testcase classname="check if bebeficiary enrolled in a program" name="Successfully check if beneficiary is enrolled in a program" time="0.035004956000000004">
+<testsuite failures="0" skipped="0" name="cucumber-js" time="0.18962111999999998" tests="13">
+  <testcase classname="check if bebeficiary enrolled in a program" name="Successfully check if beneficiary is enrolled in a program" time="0.036079116">
     <system-out><![CDATA[Given System wanna check beneficiary status in a program..................passed
 When POST request to check beneficiary status in a program is sent........passed
 Then The response from the enrolled is received...........................passed
@@ -9,7 +9,7 @@ And The enrolled response should have "Content-Type": "application/json...passed
 And The enrolled response should be returned in a timely manner 15000ms...passed
 And The enrolled response should match json schema........................passed]]></system-out>
   </testcase>
-  <testcase classname="update / create beneficiaries in IBR" name="Successfully update beneficiaries smoke type test" time="0.01854456">
+  <testcase classname="update / create beneficiaries in IBR" name="Successfully update beneficiaries smoke type test" time="0.015929689">
     <system-out><![CDATA[Given System wanna update beneficiaries enrollments.......................passed
 When POST request to update or create beneficiaries is sent...............passed
 Then The response from the enrollment updates is received.................passed
@@ -18,7 +18,7 @@ And The enrollment updates response should have "Content-Type": "applic...passed
 And The enrollment updates response should be returned in a timely mann...passed
 And The enrollment updates response should match json schema..............passed]]></system-out>
   </testcase>
-  <testcase classname="Receive async search results from IBR through a callback" name="Successfully receive async search results from IBR" time="0.011812883">
+  <testcase classname="Receive async search results from IBR through a callback" name="Successfully receive async search results from IBR" time="0.013503169">
     <system-out><![CDATA[Given SP has previously sent a search request to IBR......................passed
 When IBR completes processing and calls SP on-search callback.............passed
 Then SP should receive the on-search response from IBR....................passed
@@ -27,7 +27,7 @@ And The on-search response should have "Content-Type": "application/jso...passed
 And The on-search response should be received within 15000ms..............passed
 And The on-search response should match the expected JSON schema..........passed]]></system-out>
   </testcase>
-  <testcase classname="Callback for Subscribe To IBR based on specific criteria" name="Successfully receive async subscribe results from IBR" time="0.017661819">
+  <testcase classname="Callback for Subscribe To IBR based on specific criteria" name="Successfully receive async subscribe results from IBR" time="0.012970629">
     <system-out><![CDATA[Given SP has previously sent a subscribe request to IBR...................passed
 When IBR completes processing and calls SP on-subscribe callback..........passed
 Then SP should receive the on-subscribe response from IBR.................passed
@@ -36,7 +36,7 @@ And The on-subscribe response should have "Content-Type": "application/...passed
 And The on-subscribe response should be returned in a timely manner 150...passed
 And The on-subscribe response should match json schema....................passed]]></system-out>
   </testcase>
-  <testcase classname="callback for Unsubscribe from IBR" name="Successfully  receive async unsubscribe results from IBR" time="0.014385503999999999">
+  <testcase classname="callback for Unsubscribe from IBR" name="Successfully  receive async unsubscribe results from IBR" time="0.010964084999999998">
     <system-out><![CDATA[Given SP has previously sent an unsubscribe request to IBR................passed
 When IBR completes processing and calls SP on-unsubscribe callback........passed
 Then SP should receive the on-unsubscribe response from IBR...............passed
@@ -45,7 +45,7 @@ And The on-unsubscribe response should have "Content-Type": "applicatio...passed
 And The on-unsubscribe response should be returned in a timely manner 1...passed
 And The on-unsubscribe response should match json schema..................passed]]></system-out>
   </testcase>
-  <testcase classname="Search person from IBR based on specific criteria" name="Successfully search IBR to be processed" time="0.018932108">
+  <testcase classname="Search person from IBR based on specific criteria" name="Successfully search IBR to be processed" time="0.011582903">
     <system-out><![CDATA[Given System wants to search for person in IBR............................passed
 When A POST request to search is sent.....................................passed
 Then The response from the search should be received......................passed
@@ -54,7 +54,7 @@ And The search response should have "Content-Type": "application/json" ...passed
 And The search response should be returned in a timely manner within 15...passed
 And The search response should match the expected JSON schema.............passed]]></system-out>
   </testcase>
-  <testcase classname="Subscribe To IBR based on specific criteria" name="Successfully subscribe to get new beneficiaries enrollment to be processed smoke type test" time="0.015588197">
+  <testcase classname="Subscribe To IBR based on specific criteria" name="Successfully subscribe to get new beneficiaries enrollment to be processed smoke type test" time="0.011668446">
     <system-out><![CDATA[Given System wanna subscribe to get new enrollments for beneficiaries.....passed
 When POST request to subscribe is sent....................................passed
 Then The response from the subscribe is received..........................passed
@@ -63,7 +63,7 @@ And The subscribe response should have "Content-Type": "application/jso...passed
 And The subscribe response should be returned in a timely manner 15000m...passed
 And The subscribe response should match json schema.......................passed]]></system-out>
   </testcase>
-  <testcase classname="Search person from IBR based on specific criteria" name="Successfully search IBR to be processed [1]" time="0.013362008">
+  <testcase classname="Search person from IBR based on specific criteria" name="Successfully search IBR to be processed [1]" time="0.011838984">
     <system-out><![CDATA[Given System wants to sync search for person in IBR.......................passed
 When A POST request to sync search is sent................................passed
 Then The response from the sync search should be received.................passed
@@ -72,14 +72,14 @@ And The sync search response should have "Content-Type": "application/j...passed
 And The sync search response should be returned in a timely manner with...passed
 And The sync search response should match the expected JSON schema........passed]]></system-out>
   </testcase>
-  <testcase classname="Search person from IBR based on specific criteria" name="Validate the structure of reg_records in search response Functional Test" time="0.012696124000000001">
+  <testcase classname="Search person from IBR based on specific criteria" name="Validate the structure of reg_records in search response Functional Test" time="0.014070728">
     <system-out><![CDATA[Given System has sent a sync search request for IBR person for a functi...passed
 When A POST request to sync search is sent Functional Test................passed
 Then The response from the sync search should be received Functional Te...passed
 And The sync search response should contain a reg_records array Functio...passed
 And Each item in the reg_records array should match the defined JSON sc...passed]]></system-out>
   </testcase>
-  <testcase classname="Get transaction status synchronously" name="Successfully get transaction status synchronously" time="0.011766564000000002">
+  <testcase classname="Get transaction status synchronously" name="Successfully get transaction status synchronously" time="0.015389031000000001">
     <system-out><![CDATA[Given System wants to get transaction status synchronously................passed
 When A POST request to sync txn status is sent............................passed
 Then The response from the getting sync txn status should be received.....passed
@@ -88,7 +88,7 @@ And The sync txn status response should have "Content-Type": "applicati...passed
 And The sync txn status response should be returned in a timely manner ...passed
 And The sync txn status response should match the expected JSON schema....passed]]></system-out>
   </testcase>
-  <testcase classname="Get transaction status" name="Successfully receive async txn status result from IBR" time="0.013768047">
+  <testcase classname="Get transaction status" name="Successfully receive async txn status result from IBR" time="0.011947932999999997">
     <system-out><![CDATA[Given SP has previously sent a txn status request to IBR..................passed
 When IBR completes processing and calls SP txn on-status callback.........passed
 Then SP should receive the txn on-status response from IBR................passed
@@ -97,7 +97,7 @@ And The txn on-status response should have "Content-Type": "application...passed
 And The txn on-status response should be returned in a timely manner 15...passed
 And The txn on-status response should match json schema...................passed]]></system-out>
   </testcase>
-  <testcase classname="Get transaction status async" name="Successfully get transaction status" time="0.009232454">
+  <testcase classname="Get transaction status async" name="Successfully get transaction status" time="0.009916555000000002">
     <system-out><![CDATA[Given System wants to get transaction status..............................passed
 When A POST request to txn status is sent.................................passed
 Then The response from the getting txn status should be received..........passed
@@ -106,7 +106,7 @@ And The txn status response should have "Content-Type": "application/js...passed
 And The txn status response should be returned in a timely manner withi...passed
 And The txn status response should match the expected JSON schema.........passed]]></system-out>
   </testcase>
-  <testcase classname="Unsubscribe from IBR based on specific criteria" name="Successfully unsubscribe from IBR to be processed smoke type test" time="0.015508413999999996">
+  <testcase classname="Unsubscribe from IBR based on specific criteria" name="Successfully unsubscribe from IBR to be processed smoke type test" time="0.013759852">
     <system-out><![CDATA[Given System wanna unsubscribe from IBR...................................passed
 When POST request to unsubscribe is sent..................................passed
 Then The response from the unsubscribe is received........................passed
