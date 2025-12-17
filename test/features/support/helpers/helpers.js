@@ -38,7 +38,7 @@ export const enrollmentUpdatesResponseSchema = {
   properties: {
     message: {
       type: 'object',
-      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      required: ['ack_status', 'timestamp', 'correlation_id'],
       properties: {
         ack_status: { type: 'string' },
         timestamp: { type: 'string' },
@@ -56,7 +56,7 @@ export const enrolledResponseSchema = {
   properties: {
     message: {
       type: 'object',
-      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      required: ['ack_status', 'timestamp', 'correlation_id'],
       properties: {
         ack_status: { type: 'string' },
         timestamp: { type: 'string' },
@@ -74,7 +74,7 @@ export const subscribeResponseSchema = {
   properties: {
     message: {
       type: 'object',
-      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      required: ['ack_status', 'timestamp', 'correlation_id'],
       properties: {
         ack_status: { type: 'string' },
         timestamp: { type: 'string' },
@@ -92,7 +92,7 @@ export const unsubscribeResponseSchema = {
   properties: {
     message: {
       type: 'object',
-      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      required: ['ack_status', 'timestamp', 'correlation_id'],
       properties: {
         ack_status: { type: 'string' },
         timestamp: { type: 'string' },
@@ -212,7 +212,7 @@ export const onsearchResponseSchema = {
   properties: {
     message: {
       type: 'object',
-      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      required: ['ack_status', 'timestamp', 'correlation_id'],
       properties: {
         ack_status: { type: 'string' },
         timestamp: { type: 'string' },
@@ -263,7 +263,7 @@ export const onsubscribeResponseSchema =  {
   properties: {
     message: {
       type: 'object',
-      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      required: ['ack_status', 'timestamp', 'correlation_id'],
       properties: {
         ack_status: { type: 'string' },
         timestamp: { type: 'string' },
@@ -282,7 +282,7 @@ export const onunsubscribeResponseSchema =  {
   properties: {
     message: {
       type: 'object',
-      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      required: ['ack_status', 'timestamp', 'correlation_id'],
       properties: {
         ack_status: { type: 'string' },
         timestamp: { type: 'string' },
@@ -318,7 +318,7 @@ export const asynctxnstatusResponseSchema =  {
   properties: {
     message: {
       type: 'object',
-      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      required: ['ack_status', 'timestamp', 'correlation_id'],
       properties: {
         ack_status: { type: 'string' },
         timestamp: { type: 'string' },
@@ -337,7 +337,7 @@ export const ontxnstatusResponseSchema =  {
   properties: {
     message: {
       type: 'object',
-      required: ['ack_status', 'timestamp', 'error', 'correlation_id'],
+      required: ['ack_status', 'timestamp','correlation_id'],
       properties: {
         ack_status: { type: 'string' },
         timestamp: { type: 'string' },
