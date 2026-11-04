@@ -1,6 +1,6 @@
 // A valid, minimal-but-realistic request for every endpoint.
 
-import { endpoints, senderId, receiverId } from './helpers.js';
+import { endpoints } from './helpers.js';
 import { records, specBeneficiaryExample, specMemberExample, specPersonExample } from '../fixtures/records.js';
 import {
   msgHeader, callbackHeader, envelope, searchItem, searchMessage, idTypeValueQuery,
@@ -51,18 +51,14 @@ export function defaultMessage(endpointName) {
   }
 }
 
-// Endpoints whose request carries a callback header (MsgCallbackHeader). The SP-MIS sends the
-// enrolment updates to the IBR, the others are sent by the IBR.
-const usesCallbackHeader = new Set(['on-search', 'notify', 'txn on-status', 'enrollment updates']);
+// Endpoints whose request carries a callback header (MsgCallbackHeader): the messages the IBR sends.
+const usesCallbackHeader = new Set(['on-search', 'on-subscribe', 'on-unsubscribe', 'notify', 'txn on-status']);
 
 export function buildRequest(endpointName, message = defaultMessage(endpointName)) {
   const { action } = endpoints[endpointName];
   const items = message.search_request || message.subscribe_request || message.search_response
     || message.subscribe_response || message.notify_event || message.enrolled_updates?.beneficiaries || [message];
   const counts = { totalCount: items.length };
-  let header;
-  if (endpointName === 'enrollment updates') header = callbackHeader(action, { ...counts, from: senderId, to: receiverId });
-  else if (usesCallbackHeader.has(endpointName)) header = callbackHeader(action, counts);
-  else header = msgHeader(action, counts);
+  const header = usesCallbackHeader.has(endpointName) ? callbackHeader(action, counts) : msgHeader(action, counts);
   return envelope(header, message);
 }

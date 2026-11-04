@@ -44,6 +44,7 @@ This API is exposed by the subscriber to receive the result of a subscription re
       | case                           | field                                                       | value                                |
       | missing header                 | header                                                      | <removed>                            |
       | wrong action                   | header.action                                               | "subscribe"                          |
+      | missing header status          | header.status                                               | <removed>                            |
       | missing message                | message                                                     | <removed>                            |
       | missing correlation_id         | message.correlation_id                                      | <removed>                            |
       | missing subscribe_response     | message.subscribe_response                                  | <removed>                            |

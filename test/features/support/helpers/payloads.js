@@ -24,9 +24,8 @@ export function msgHeader(action, { totalCount = 1, senderUri } = {}) {
   };
 }
 
-// Header of the messages an IBR sends (callbacks); `from` swaps sender and receiver for the
-// enrolment updates the SP-MIS sends to the IBR with a callback header.
-export function callbackHeader(action, { status = 'succ', totalCount = 1, completedCount = totalCount, from = receiverId, to = senderId } = {}) {
+// Header of the messages an IBR sends (callbacks and sync responses).
+export function callbackHeader(action, { status = 'succ', totalCount = 1, completedCount = totalCount } = {}) {
   return {
     version: '1.0.0',
     message_id: randomUUID(),
@@ -35,8 +34,8 @@ export function callbackHeader(action, { status = 'succ', totalCount = 1, comple
     status,
     total_count: totalCount,
     completed_count: completedCount,
-    sender_id: from,
-    receiver_id: to,
+    sender_id: receiverId,
+    receiver_id: senderId,
     is_msg_encrypted: false,
   };
 }

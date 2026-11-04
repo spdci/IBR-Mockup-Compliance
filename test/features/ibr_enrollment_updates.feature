@@ -11,7 +11,8 @@ The IBR confirms receipt of the published data (PRS.IBR.02.6, PRS.IBR.03.4) with
 EnrollmentUpdatesResponse.
 
 The request is an EnrollmentUpdatesRequest (enrolled_updates.beneficiaries: Beneficiary
-records) under a callback header with action "notify", as the spec defines it. Every
+records) with header action "enrollment-updates"; the answer is an envelope whose callback
+header has the action "on-enrollment-updates". Every
 published beneficiary is first checked against the IBR data rules; the IBR must refuse
 beneficiaries whose data breaks them (@strict-data).
 
@@ -115,13 +116,14 @@ beneficiaries whose data breaks them (@strict-data).
     When the request is sent
     Then the request should be rejected according to the DCI error model
 
-    Examples: Envelope and header (callback header, action "notify")
+    Examples: Envelope and header (action "enrollment-updates")
       | case                   | field              | value       |
       | missing header         | header             | <removed>   |
       | missing message        | message            | <removed>   |
       | wrong action           | header.action      | "register"  |
-      | missing header status  | header.status      | <removed>   |
-      | unknown header status  | header.status      | "done"      |
+      | former action notify   | header.action      | "notify"    |
+      | missing sender_id      | header.sender_id   | <removed>   |
+      | missing total_count    | header.total_count | <removed>   |
       | missing message_id     | header.message_id  | <removed>   |
       | invalid message_ts     | header.message_ts  | "now"       |
 

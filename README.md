@@ -1,7 +1,7 @@
 # IBR Registry Compliance and Mockup
 
 Compliance test suite and mock API for the **DCI Integrated Beneficiary Registry (IBR) API v1.0.0**
-([`ibr_api_v1.0.0.yaml`](https://github.com/spdci/api-standards), `draft` branch), checking the IBR
+([`ibr_api_v1.0.0.yaml`](https://github.com/spdci/api-standards), `draft` branch, commit `ce1f22c`), checking the IBR
 data standard: Person (DO.IBR.01), Member (DO.IBR.02), Group (DO.IBR.03), Beneficiary (DO.IBR.04),
 Programme, Benefit and BenefitFrequency, the IBR code directory (CD.IBR.01-07) and the data types
 and formats. The data objects and code lists come from [`spdci/schemas`](https://github.com/spdci/schemas)
@@ -15,8 +15,8 @@ All 13 endpoints of the standard, split by the system that exposes them:
 |---|---|---|---|
 | IBR | `ibr/sync/search` | `/registry/sync/search` | Search results (header `on-search` + SearchResponse) |
 | IBR | `ibr/search` | `/registry/search` | ACK, then `on-search` callback to `header.sender_uri` |
-| IBR | `ibr/sync/enrolled` | `/registry/sync/enrolled` | EnrolledResponse: `yes` / `no` per beneficiary |
-| IBR | `ibr/sync/enrollment/updates` | `/registry/sync/enrollment/updates` | EnrollmentUpdatesResponse: one receipt per beneficiary |
+| IBR | `ibr/sync/enrolled` | `/registry/sync/enrolled` | Header `on-enrolled` + EnrolledResponse: `yes` / `no` per beneficiary |
+| IBR | `ibr/sync/enrollment/updates` | `/registry/sync/enrollment/updates` | Header `on-enrollment-updates` + EnrollmentUpdatesResponse: one receipt per beneficiary |
 | IBR | `ibr/subscribe` | `/registry/subscribe` | ACK, then `on-subscribe` callback |
 | IBR | `ibr/unsubscribe` | `/registry/unsubscribe` | ACK, then `on-unsubscribe` callback |
 | IBR | `ibr/txn/status` | `/registry/txn/status` | ACK, then `txn/on-status` callback |
@@ -54,7 +54,7 @@ The process flows of the standard map to these endpoints:
 PRS.IBR.04 (the IBR queries the social registry) is a call **from** the IBR to the SR: it is covered
 by the SR compliance suite.
 
-The test suite (`test/features`, 1206 scenarios) checks, per endpoint:
+The test suite (`test/features`, 1209 scenarios) checks, per endpoint:
 
 - **smoke**: status, JSON content type, response time, response schema;
 - **functional**: beneficiary, person, member and group search by every identifier type; predicate
@@ -187,11 +187,6 @@ The published sources disagree in places. The suite's choices:
   so it is rejected;
 - **response_entity**: `common/ResponseEntity.yaml` lists `Group` and `Member`, the EnrolledCriteria
   example uses `Beneficiary`. All three are accepted;
-- **`sync/enrolled` and `sync/enrollment/updates` responses**: the spec gives the bare
-  EnrolledResponse / EnrollmentUpdatesResponse as the response, while every other DCI sync response
-  is an envelope (`header` + `message`). Both forms are accepted; the mock returns the bare form;
-- **`sync/enrollment/updates` header**: the spec gives the request a callback header with action
-  `notify` (so `header.status` is required). The suite follows the spec;
 - **EnrolledCriteria.query**: an object whose shape is not defined beyond the example
   `{ "person_identifier": { "eq": ... } }`. The suite uses that expression form with
   `programme_identifier`, `member_identifier` and `group_identifier`, `in` for batches, and checks
@@ -275,6 +270,28 @@ cd test && npm install && npx cucumber-js
 ```
 
 Reports are written to `test/result` (HTML, JUnit XML, Cucumber messages).
+
+### Continuous integration and published results
+
+`.github/workflows/compliance.yml` runs on every pull request, on pushes to `master` and on demand
+(Actions > IBR compliance > Run workflow, with an optional Cucumber tag expression):
+
+| Job | What it does |
+|---|---|
+| Compliance suite (mocks) | Checks `mockoon-*.json` are up to date with `mock/generate-mocks.mjs`, starts the mocks, runs the suite and publishes the results: the **IBR compliance results** check (one annotation per failed scenario), a summary comment on pull requests, and the `ibr-compliance-report` artifact (HTML, JUnit XML, Cucumber messages) |
+| Docker images | Builds the mock and test-runner images and runs the suite with `docker compose`, as documented above (`ibr-compliance-report-docker` artifact) |
+| Publish report to GitHub Pages | On `master` only: publishes the site (see below). Requires Settings > Pages > Source: **GitHub Actions** |
+
+The published site (`site/build-site.mjs`; on pull requests it is attached as the `ibr-compliance-site` artifact) has:
+
+- a landing page with the results of the latest run;
+- `report/`: the Cucumber HTML report and JUnit results;
+- `api/`: a Swagger UI with two definitions: the **DCI IBR API v1.0.0** as published
+  (`docs/openapi/ibr_api_v1.0.0.yaml`, from spdci/api-standards `release/yaml`, commit `ce1f22c`), and the
+  **IBR mock**, the same API on the mock paths (`/ibr/...`) and ports (3333 IBR side, 3334 SP-MIS side). Start
+  the mocks locally and use "Try it out" to send requests to them (`api/?spec=mock` opens it directly).
+
+Build it locally with `node site/build-site.mjs --out _site --report test/result/<name>.html --junit test/result/<name>.xml`.
 
 ### Testing your own implementation
 

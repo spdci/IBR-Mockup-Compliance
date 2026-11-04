@@ -6,9 +6,10 @@ is enrolled in a specific programme before enrolling it in its own scheme. The I
 with a minimal yes / no per beneficiary (EnrolledResponse.enrolled_status), never with the
 beneficiary's records (data minimisation, PRS.IBR.01.2). Queries can be made at individual
 (member) level and at group / household level, for a batch of potential beneficiaries, and
-once per programme.
+once per programme. The answer is an envelope whose callback header has the action
+"on-enrolled".
 
-The request carries an EnrolledRequest: enrolled_criteria with a query_type, a
+The request (header action "enrolled") carries an EnrolledRequest: enrolled_criteria with a query_type, a
 response_entity (Group or Member) and a query. The suite uses the spec's expression form:
   { "member_identifier": { "eq": "M100000001" }, "programme_identifier": { "eq": "DCI001" } }
 with "in" for batches, plus the idtype-value and predicate forms.
@@ -201,7 +202,7 @@ with "in" for batches, plus the idtype-value and predicate forms.
       | case                 | field              | value        |
       | missing header       | header             | <removed>    |
       | missing message      | message            | <removed>    |
-      | wrong action         | header.action      | "enrolled"   |
+      | wrong action         | header.action      | "search"     |
       | missing message_id   | header.message_id  | <removed>    |
       | missing sender_id    | header.sender_id   | <removed>    |
       | missing total_count  | header.total_count | <removed>    |

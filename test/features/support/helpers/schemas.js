@@ -1,7 +1,7 @@
 // JSON Schemas (draft-07) for the DCI Integrated Beneficiary Registry (IBR) API v1.0.0.
 //
 // Sources:
-//  - api-standards/src/registry/ibr_api_v1.0.0.yaml (draft, 2026-07) and the schemas it
+//  - api-standards/src/registry/ibr_api_v1.0.0.yaml (draft, ce1f22c 2026-11) and the schemas it
 //    references (registry/ibr/*, registry/schema/*, extensions/ibr/*, common/schema/*)
 //  - DCI IBR v1.0.0 data standard (self-assessment: DO.IBR.01 Person, DO.IBR.02 Member,
 //    DO.IBR.03 Group, DO.IBR.04 Beneficiary, Programme, Benefit, BenefitFrequency, code
@@ -1154,30 +1154,20 @@ function envelope({ headerDef, action, messageDef, messageRequired }) {
   };
 }
 
-// The spec declares the bare EnrolledResponse / EnrollmentUpdatesResponse as the response of
-// the sync enrolment endpoints, while every other DCI sync response is an envelope. Both
-// forms are accepted; the envelope's header action is not fixed by the spec.
-const bareOrEnvelope = (messageDef) => ({
-  if: { type: 'object', required: ['header'] },
-  then: envelope({ headerDef: 'MsgCallbackHeader', messageDef, messageRequired: false }),
-  else: ref(messageDef),
-});
-
 export const envelopeDefinitions = {
   'search': envelope({ headerDef: 'MsgHeader', action: 'search', messageDef: 'SearchRequest', messageRequired: true }),
   'subscribe': envelope({ headerDef: 'MsgHeader', action: 'subscribe', messageDef: 'SubscribeRequest', messageRequired: true }),
   'unsubscribe': envelope({ headerDef: 'MsgHeader', action: 'unsubscribe', messageDef: 'UnSubscribeRequest', messageRequired: true }),
   'txn-status': envelope({ headerDef: 'MsgHeader', action: 'txn-status', messageDef: 'TxnStatusRequest', messageRequired: true }),
-  'enrolled': envelope({ headerDef: 'MsgHeader', action: 'search', messageDef: 'EnrolledRequest', messageRequired: true }),
-  // The spec gives /registry/sync/enrollment/updates a callback header with action "notify".
-  'enrollment-updates': envelope({ headerDef: 'MsgCallbackHeader', action: 'notify', messageDef: 'EnrollmentUpdatesRequest', messageRequired: true }),
+  'enrolled': envelope({ headerDef: 'MsgHeader', action: 'enrolled', messageDef: 'EnrolledRequest', messageRequired: true }),
+  'enrollment-updates': envelope({ headerDef: 'MsgHeader', action: 'enrollment-updates', messageDef: 'EnrollmentUpdatesRequest', messageRequired: true }),
   'on-search': envelope({ headerDef: 'MsgCallbackHeader', action: 'on-search', messageDef: 'SearchResponse', messageRequired: false }),
-  'on-subscribe': envelope({ headerDef: 'MsgHeader', action: 'on-subscribe', messageDef: 'SubscribeResponse', messageRequired: true }),
-  'on-unsubscribe': envelope({ headerDef: 'MsgHeader', action: 'on-unsubscribe', messageDef: 'UnSubscribeResponse', messageRequired: true }),
+  'on-subscribe': envelope({ headerDef: 'MsgCallbackHeader', action: 'on-subscribe', messageDef: 'SubscribeResponse', messageRequired: true }),
+  'on-unsubscribe': envelope({ headerDef: 'MsgCallbackHeader', action: 'on-unsubscribe', messageDef: 'UnSubscribeResponse', messageRequired: true }),
   'notify': envelope({ headerDef: 'MsgCallbackHeader', action: 'notify', messageDef: 'NotifyEventRequest', messageRequired: false }),
   'txn-on-status': envelope({ headerDef: 'MsgCallbackHeader', action: 'txn-on-status', messageDef: 'TxnStatusResponse', messageRequired: false }),
-  'enrolled-response': bareOrEnvelope('EnrolledResponse'),
-  'enrollment-updates-response': bareOrEnvelope('EnrollmentUpdatesResponse'),
+  'enrolled-response': envelope({ headerDef: 'MsgCallbackHeader', action: 'on-enrolled', messageDef: 'EnrolledResponse', messageRequired: false }),
+  'enrollment-updates-response': envelope({ headerDef: 'MsgCallbackHeader', action: 'on-enrollment-updates', messageDef: 'EnrollmentUpdatesResponse', messageRequired: false }),
 };
 envelopeDefinitions['sync-search-response'] = envelopeDefinitions['on-search'];
 envelopeDefinitions['sync-txn-status-response'] = envelopeDefinitions['txn-on-status'];

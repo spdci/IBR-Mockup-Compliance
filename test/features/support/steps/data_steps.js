@@ -82,11 +82,9 @@ Then('every {string} code should be accepted in the list {string}', function (li
 });
 
 // Envelope-level: encrypted payloads are validated as EncryptedMessage.
-// The message kind names the header action, except for enrolment updates whose action is "notify".
-Given('an encrypted {string} message', function (kind) {
-  const action = { 'enrollment-updates': 'notify' }[kind] ?? kind;
+Given('an encrypted {string} message', function (action) {
   this.request = { header: { ...callbackHeader(action), is_msg_encrypted: true }, message: encryptedMessage() };
-  this.messageKind = kind;
+  this.messageKind = action;
 });
 
 When('its encrypted field {string} is removed', function (path) {

@@ -40,6 +40,14 @@ const REG_TYPE = 'ns:org:RegistryType:IBR';
 const IBR_ID = 'ibr.example.org';
 const NOW = '{{now "yyyy-MM-dd\'T\'HH:mm:ss.SSSxxx"}}';
 const JSON_HEADERS = [{ key: 'Content-Type', value: 'application/json' }];
+// `cors: true` only answers preflight requests; these headers let browsers (e.g. the Swagger UI
+// "Try it out" of the published API reference) read the actual responses.
+const ENV_HEADERS = [
+  ...JSON_HEADERS,
+  { key: 'Access-Control-Allow-Origin', value: '*' },
+  { key: 'Access-Control-Allow-Methods', value: 'GET,POST,OPTIONS' },
+  { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With' },
+];
 
 // ---------------------------------------------------------------------------
 // Handlebars templates
@@ -125,17 +133,6 @@ const callbackHeader = (action, countPath) => `{
     "completed_count": ${countPath ? `{{len (bodyRaw '${countPath}')}}` : 1},
     "sender_id": "${IBR_ID}",
     "receiver_id": "{{bodyRaw 'header.sender_id'}}",
-    "is_msg_encrypted": false
-  }`;
-
-const msgHeader = (action, countPath) => `{
-    "version": "1.0.0",
-    "message_id": "{{guid}}",
-    "message_ts": "${NOW}",
-    "action": "${action}",
-    "sender_id": "${IBR_ID}",
-    "receiver_id": "{{bodyRaw 'header.sender_id'}}",
-    "total_count": ${countPath ? `{{len (bodyRaw '${countPath}')}}` : 1},
     "is_msg_encrypted": false
   }`;
 
@@ -262,6 +259,8 @@ const enrolledResponse = `{{setVar 'ids' (array)}}
 {{#if (bodyRaw '${Q}.group_identifier.in')}}{{setVar 'ids' (bodyRaw '${Q}.group_identifier.in')}}{{/if}}
 {{setVar 'prog' (bodyRaw '${Q}.programme_identifier.eq' '*')}}
 {
+  "header": ${callbackHeader('on-enrolled')},
+  "message": {
   "transaction_id": "{{bodyRaw 'message.transaction_id'}}",
   "correlation_id": "{{guid}}",
   "enrolled_response": [
@@ -274,10 +273,13 @@ const enrolledResponse = `{{setVar 'ids' (array)}}
     }{{#unless @last}},{{/unless}}
     {{/each}}
   ]
+  }
 }`;
 
 // PRS.IBR.02 / PRS.IBR.03: EnrollmentUpdatesResponse, one receipt per published beneficiary.
 const enrollmentUpdatesResponse = `{
+  "header": ${callbackHeader('on-enrollment-updates', 'message.enrolled_updates.beneficiaries')},
+  "message": {
   "transaction_id": "{{bodyRaw 'message.transaction_id'}}",
   "correlation_id": "{{guid}}",
   "enrolled_response": [
@@ -289,6 +291,7 @@ const enrollmentUpdatesResponse = `{
     }{{#unless @last}},{{/unless}}
     {{/each}}
   ]
+  }
 }`;
 
 // ---------------------------------------------------------------------------
@@ -393,7 +396,7 @@ function environment({ key, name, port, routes, data, callbacks = [] }) {
     proxyRemovePrefix: false,
     tlsOptions: { enabled: false, type: 'CERT', pfxPath: '', certPath: '', keyPath: '', caPath: '', passphrase: '' },
     cors: true,
-    headers: JSON_HEADERS,
+    headers: ENV_HEADERS,
     proxyReqHeaders: [{ key: '', value: '' }],
     proxyResHeaders: [{ key: '', value: '' }],
     data,
@@ -418,9 +421,9 @@ const ibrSchemas = Object.fromEntries(['search', 'subscribe', 'unsubscribe', 'tx
 const ibrCallbacks = [
   callback('ibr', 'on-search', 'Async search results sent to header.sender_uri', onSearchBody),
   callback('ibr', 'on-subscribe', 'Subscription result sent to header.sender_uri',
-    `{\n  "header": ${msgHeader('on-subscribe', 'message.subscribe_request')},\n  "message": ${subscribeMessage}\n}`),
+    `{\n  "header": ${callbackHeader('on-subscribe', 'message.subscribe_request')},\n  "message": ${subscribeMessage}\n}`),
   callback('ibr', 'on-unsubscribe', 'Unsubscribe result sent to header.sender_uri',
-    `{\n  "header": ${msgHeader('on-unsubscribe')},\n  "message": ${unsubscribeMessage}\n}`),
+    `{\n  "header": ${callbackHeader('on-unsubscribe')},\n  "message": ${unsubscribeMessage}\n}`),
   callback('ibr', 'txn-on-status', 'Transaction status sent to header.sender_uri',
     `{\n  "header": ${callbackHeader('txn-on-status')},\n  "message": ${txnStatusMessage}\n}`),
 ];
@@ -452,10 +455,10 @@ const ibr = environment({
       body: `{\n  "header": ${callbackHeader('txn-on-status')},\n  "message": ${txnStatusMessage}\n}`,
     }),
     route('ibr', 'ibr/sync/enrolled', 'POST /registry/sync/enrolled - is a beneficiary enrolled in a programme (PRS.IBR.01), yes / no answer', 'enrolled', {
-      label: 'EnrolledResponse (yes / no per identifier)', body: enrolledResponse,
+      label: 'Enrolment answer (header action on-enrolled + EnrolledResponse, yes / no per identifier)', body: enrolledResponse,
     }),
     route('ibr', 'ibr/sync/enrollment/updates', 'POST /registry/sync/enrollment/updates - beneficiaries, benefits and status changes published by the SP-MIS (PRS.IBR.02, PRS.IBR.03)', 'enrollment-updates', {
-      label: 'EnrollmentUpdatesResponse (one receipt per beneficiary)', body: enrollmentUpdatesResponse,
+      label: 'Receipt (header action on-enrollment-updates + EnrollmentUpdatesResponse, one per beneficiary)', body: enrollmentUpdatesResponse,
     }),
     healthcheck('ibr'),
   ],

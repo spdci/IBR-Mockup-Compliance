@@ -70,12 +70,12 @@ export const endpoints = {
   },
   // PRS.IBR.01: is a beneficiary enrolled in a programme (minimal yes / no answer).
   'enrolled': {
-    side: 'ibr', path: 'ibr/sync/enrolled', action: 'search',
+    side: 'ibr', path: 'ibr/sync/enrolled', action: 'enrolled',
     requestSchema: 'enrolled', responseSchema: 'enrolled-response',
   },
   // PRS.IBR.02 / PRS.IBR.03: the SP-MIS publishes beneficiaries, benefits and status changes.
   'enrollment updates': {
-    side: 'ibr', path: 'ibr/sync/enrollment/updates', action: 'notify',
+    side: 'ibr', path: 'ibr/sync/enrollment/updates', action: 'enrollment-updates',
     requestSchema: 'enrollment-updates', responseSchema: 'enrollment-updates-response',
   },
   'on-search': {

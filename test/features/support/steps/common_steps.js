@@ -20,11 +20,9 @@ export function expectNoErrors(errors, what) {
   expect(errors, `${what}:\n${formatErrors(errors)}`).to.be.empty;
 }
 
-// The message part of the inspected body (the sync enrolment responses may be bare).
+// The message part of the inspected body.
 export function inspectedMessage(world) {
-  const body = world.inspected?.body;
-  if (body && typeof body === 'object' && !body.header && ['enrolled-response', 'enrollment-updates-response'].includes(world.inspected.kind)) return body;
-  return body?.message;
+  return world.inspected?.body?.message;
 }
 
 // ---------------------------------------------------------------------------
@@ -135,7 +133,7 @@ Then('the request should be rejected according to the DCI error model', function
     expect(header.status_reason_code, 'header.status_reason_code of a rejected request').to.be.a('string');
     return;
   }
-  const message = body?.header ? body.message : body;
+  const message = body?.message;
   const searchItems = message?.search_response || message?.txnstatus_response?.txn_status?.search_response;
   if (Array.isArray(searchItems) && searchItems.length && searchItems.every((i) => i.status === 'rjct')) {
     searchItems.forEach((i, n) => expect(i.status_reason_code, `search_response[${n}].status_reason_code`).to.be.a('string'));

@@ -43,6 +43,7 @@ This API is exposed by the subscriber to receive the result of an unsubscribe re
       | case                        | field                                | value                 |
       | missing header              | header                               | <removed>             |
       | wrong action                | header.action                        | "unsubscribe"         |
+      | missing header status       | header.status                        | <removed>             |
       | missing message             | message                              | <removed>             |
       | missing timestamp           | message.timestamp                    | <removed>             |
       | missing status              | message.status                       | <removed>             |

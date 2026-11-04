@@ -528,20 +528,21 @@ function checkEnrolmentItems(items, where) {
 }
 
 // The kinds of message whose header is a callback header.
-const CALLBACK_KINDS = ['on-search', 'notify', 'txn-on-status', 'sync-search-response', 'sync-txn-status-response', 'enrollment-updates'];
+const CALLBACK_KINDS = [
+  'on-search', 'on-subscribe', 'on-unsubscribe', 'notify', 'txn-on-status',
+  'sync-search-response', 'sync-txn-status-response', 'enrolled-response', 'enrollment-updates-response',
+];
 
 // Full validation of a received message of the given kind. Returns a list of errors.
 export function validateMessage(kind, body, request) {
   const errors = validateSchema(kind, body).errors.map((e) => `[schema] ${e}`);
   if (!body || typeof body !== 'object') return errors;
 
-  // The sync enrolment responses may be the bare message (see schemas.js).
-  const bare = ['enrolled-response', 'enrollment-updates-response'].includes(kind) && !body.header;
-  const header = bare ? undefined : body.header;
-  const message = bare ? body : body.message;
+  const header = body.header;
+  const message = body.message;
   const encrypted = header?.is_msg_encrypted === true;
 
-  if (CALLBACK_KINDS.includes(kind) || (header && ['enrolled-response', 'enrollment-updates-response'].includes(kind))) {
+  if (CALLBACK_KINDS.includes(kind)) {
     errors.push(...checkCallbackHeaderRules(header).map((e) => `[rule] ${e}`));
     if (header?.status === 'succ' && !message) errors.push('[rule] header.status is "succ" but no message is returned');
   }
